@@ -11,7 +11,7 @@ import (
 
 func main() {
 	http.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
-		SendMessage("Hey je reçois quelque chose..", false)
+		SendMessage("Hey, Allo ? tu as reçu les photos", false)
 	})
 
 	log.Println("Serving on localhost:3000")
