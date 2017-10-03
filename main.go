@@ -22,8 +22,6 @@ func main() {
 const chatTelegramID = "359897077"
 const botAPI = "429433832:AAHhjwe5-IQXoXTU0gduQuFDsQnilA7RKLU"
 
-//
-
 type SendStruct struct {
 	Ok     bool `json:"ok"`
 	Result struct {
