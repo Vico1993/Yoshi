@@ -2,25 +2,14 @@ package main
 
 import (
 	"encoding/json"
+	"fmt"
 	"io/ioutil"
 	"log"
 	"net/http"
 	"net/url"
+	"os/exec"
 	"strings"
 )
-
-func main() {
-	http.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
-		SendMessage("Hey, Allo ? tu as reçu les photos", false)
-	})
-
-	log.Println("Serving on localhost:3000")
-	err := http.ListenAndServe(":3000", nil)
-	log.Fatal(err)
-}
-
-const chatTelegramID = "359897077"
-const botAPI = "429433832:AAHhjwe5-IQXoXTU0gduQuFDsQnilA7RKLU"
 
 type SendStruct struct {
 	Ok     bool `json:"ok"`
@@ -43,7 +32,79 @@ type SendStruct struct {
 	} `json:"result"`
 }
 
-func SendMessage(text string, notification bool) bool {
+type returnStruct struct {
+	UpdateID int `json:"update_id"`
+	Message  struct {
+		MessageID int `json:"message_id"`
+		From      struct {
+			ID           int    `json:"id"`
+			IsBot        bool   `json:"is_bot"`
+			FirstName    string `json:"first_name"`
+			LastName     string `json:"last_name"`
+			LanguageCode string `json:"language_code"`
+		} `json:"from"`
+		Chat struct {
+			ID        int    `json:"id"`
+			FirstName string `json:"first_name"`
+			LastName  string `json:"last_name"`
+			Type      string `json:"type"`
+		} `json:"chat"`
+		Date int    `json:"date"`
+		Text string `json:"text"`
+	} `json:"message"`
+}
+
+func main() {
+	http.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
+
+		body, err := ioutil.ReadAll(r.Body)
+		if err != nil {
+			log.Fatal("Error reading body : ", err)
+		}
+
+		data := &returnStruct{}
+		jsonErr := json.Unmarshal([]byte(string(body)), data)
+		if jsonErr != nil {
+			log.Fatal("Error json Unmarshal : ", jsonErr)
+		}
+
+		if data.Message.From.IsBot == true {
+			log.Fatal("C'est un bot...")
+		}
+
+		var command string = data.Message.Text
+
+		if command == "/docker" {
+			// out, err := exec.Command("echo", os.Getenv("PATH")).Output()
+			out, err := exec.Command("docker", "ps", "--format", `{{.RunningFor}}:{{.Names}}`).Output()
+			if err != nil {
+				// log.Fatal("Error Command docker : ", err)
+				fmt.Println(fmt.Sprint(err) + ": " + string(out))
+			}
+
+			for _, txt := range strings.Split(string(out), "\n") {
+				dockerPs := strings.Split(txt, ":")
+				if dockerPs[0] != "" {
+					sendMessage("Le container : "+dockerPs[1]+" run depuis : "+dockerPs[0], true)
+				}
+			}
+		} else {
+			sendMessage("Je suis toujours en apprentissage.. je n'es pas compris.", true)
+		}
+
+		// println(&data.Message.Text)
+		// println("Bonjour, pourquoi " + data.Message.From.FirstName + " " + data.Message.From.LastName + " m'envoit tu ça : " + data.Message.Text)
+	})
+
+	log.Println("Serving on localhost:3000")
+	err := http.ListenAndServe(":3000", nil)
+	log.Fatal(err)
+}
+
+const chatTelegramID = "359897077"
+const botAPI = "429433832:AAHhjwe5-IQXoXTU0gduQuFDsQnilA7RKLU"
+
+func sendMessage(text string, notification bool) bool {
 	var URL *url.URL
 	URL, err := url.Parse("https://api.telegram.org/bot" + botAPI + "/sendMessage")
 	if err != nil {
