@@ -55,10 +55,8 @@ func main() {
 		var command = data.Message.Text
 
 		if command == "/docker" {
-			// out, err := exec.Command("echo", os.Getenv("PATH")).Output()
 			out, err := exec.Command("docker", "ps", "--format", `{{.RunningFor}}:{{.Names}}`).Output()
 			if err != nil {
-				// log.Fatal("Error Command docker : ", err)
 				fmt.Println(fmt.Sprint(err) + ": " + string(out))
 			}
 
