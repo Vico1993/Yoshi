@@ -2,14 +2,16 @@ package notification
 
 import (
 	"encoding/json"
+	"fmt"
 	"io/ioutil"
 	"log"
 	"net/http"
 	"net/url"
+	"os/exec"
 	"strings"
 )
 
-type SendStruct struct {
+type sendStruct struct {
 	Ok     bool `json:"ok"`
 	Result struct {
 		MessageID int `json:"message_id"`
@@ -30,8 +32,60 @@ type SendStruct struct {
 	} `json:"result"`
 }
 
+type returnStruct struct {
+	UpdateID int `json:"update_id"`
+	Message  struct {
+		MessageID int `json:"message_id"`
+		From      struct {
+			ID           int    `json:"id"`
+			IsBot        bool   `json:"is_bot"`
+			FirstName    string `json:"first_name"`
+			LastName     string `json:"last_name"`
+			LanguageCode string `json:"language_code"`
+		} `json:"from"`
+		Chat struct {
+			ID        int    `json:"id"`
+			FirstName string `json:"first_name"`
+			LastName  string `json:"last_name"`
+			Type      string `json:"type"`
+		} `json:"chat"`
+		Date int    `json:"date"`
+		Text string `json:"text"`
+	} `json:"message"`
+}
+
 const chatTelegramID = "359897077"
 const botAPI = "429433832:AAHhjwe5-IQXoXTU0gduQuFDsQnilA7RKLU"
+
+func GetTelegramMessage(body []byte) {
+	data := &returnStruct{}
+	jsonErr := json.Unmarshal([]byte(string(body)), data)
+	if jsonErr != nil {
+		log.Fatal("Error json Unmarshal : ", jsonErr)
+	}
+
+	if data.Message.From.IsBot == true {
+		log.Fatal("C'est un bot...")
+	}
+
+	var command = data.Message.Text
+
+	if command == "/docker" {
+		out, err := exec.Command("docker", "ps", "--format", `{{.RunningFor}}:{{.Names}}`).Output()
+		if err != nil {
+			fmt.Println(fmt.Sprint(err) + ": " + string(out))
+		}
+
+		for _, txt := range strings.Split(string(out), "\n") {
+			dockerPs := strings.Split(txt, ":")
+			if dockerPs[0] != "" {
+				SendTelegramMessage("Le container : "+dockerPs[1]+" run depuis : "+dockerPs[0], true)
+			}
+		}
+	} else {
+		SendTelegramMessage("Je suis toujours en apprentissage.. je n'es pas compris.", true)
+	}
+}
 
 func SendTelegramMessage(text string, notification bool) bool {
 	var URL *url.URL
@@ -81,7 +135,7 @@ func SendTelegramMessage(text string, notification bool) bool {
 		log.Fatal("erreur ReadAll: ", err)
 	}
 	var result = string(body)
-	var newrecord SendStruct
+	var newrecord sendStruct
 
 	json.NewDecoder(strings.NewReader(result)).Decode(&newrecord)
 	if newrecord.Ok {
