@@ -8,6 +8,7 @@ import (
 	"os/exec"
 	"strings"
 
+	"github.com/vico1993/Yoshi/api"
 	"github.com/vico1993/Yoshi/notification"
 )
 
@@ -31,12 +32,21 @@ func hundleCommand(cmd string) {
 				notification.SendTelegramMessage("Le container : "+dockerPs[1]+" run depuis : "+dockerPs[0], true)
 			}
 		}
+	case "/news":
+
+		var newsReturn = api.AskNewsApi("recode", "top")
+
+		for _, artcl := range newsReturn.Articles {
+			var message = "*" + artcl.Title + "* \n" + artcl.Description + "\n" + artcl.URL
+			notification.SendTelegramMessage(message, false)
+		}
 	default:
 		notification.SendTelegramMessage("Je suis toujours en apprentissage.. je n'es pas compris.", true)
 	}
 }
 
 func main() {
+
 	http.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
 
 		body, err := ioutil.ReadAll(r.Body)
