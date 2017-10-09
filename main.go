@@ -16,10 +16,9 @@ func main() {
 			log.Fatal("Error reading body : ", err)
 		}
 
+		// TODO : Need to find a way to hundle Http Request, and cmdline interface..
+		// TODO : Need to hundle a multiple way of notification ( Messenger, text, vocale... )
 		notification.GetTelegramMessage(body)
-
-		// println(&data.Message.Text)
-		// println("Bonjour, pourquoi " + data.Message.From.FirstName + " " + data.Message.From.LastName + " m'envoit tu ça : " + data.Message.Text)
 	})
 
 	log.Println("Serving on localhost:3000")

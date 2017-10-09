@@ -57,6 +57,31 @@ type returnStruct struct {
 const chatTelegramID = "359897077"
 const botAPI = "429433832:AAHhjwe5-IQXoXTU0gduQuFDsQnilA7RKLU"
 
+func hundleCommand(cmd string) {
+
+	// Direct command
+	if strings.ContainsAny(cmd, "/") {
+		if cmd == "/docker" {
+			out, err := exec.Command("docker", "ps", "--format", `{{.RunningFor}}:{{.Names}}`).Output()
+			if err != nil {
+				fmt.Println(fmt.Sprint(err) + ": " + string(out))
+			}
+
+			for _, txt := range strings.Split(string(out), "\n") {
+				dockerPs := strings.Split(txt, ":")
+				if dockerPs[0] != "" {
+					SendTelegramMessage("Le container : "+dockerPs[1]+" run depuis : "+dockerPs[0], true)
+				}
+			}
+		} else {
+			SendTelegramMessage("Je suis toujours en apprentissage.. je n'es pas compris.", true)
+		}
+	} else {
+		// Context command
+		// TODO : Do context scenario
+	}
+}
+
 func GetTelegramMessage(body []byte) {
 	data := &returnStruct{}
 	jsonErr := json.Unmarshal([]byte(string(body)), data)
@@ -70,21 +95,7 @@ func GetTelegramMessage(body []byte) {
 
 	var command = data.Message.Text
 
-	if command == "/docker" {
-		out, err := exec.Command("docker", "ps", "--format", `{{.RunningFor}}:{{.Names}}`).Output()
-		if err != nil {
-			fmt.Println(fmt.Sprint(err) + ": " + string(out))
-		}
-
-		for _, txt := range strings.Split(string(out), "\n") {
-			dockerPs := strings.Split(txt, ":")
-			if dockerPs[0] != "" {
-				SendTelegramMessage("Le container : "+dockerPs[1]+" run depuis : "+dockerPs[0], true)
-			}
-		}
-	} else {
-		SendTelegramMessage("Je suis toujours en apprentissage.. je n'es pas compris.", true)
-	}
+	hundleCommand(command)
 }
 
 func SendTelegramMessage(text string, notification bool) bool {
