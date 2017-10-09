@@ -61,7 +61,9 @@ func hundleCommand(cmd string) {
 
 	// Direct command
 	if strings.ContainsAny(cmd, "/") {
-		if cmd == "/docker" {
+
+		switch cmd {
+		case "/docker":
 			out, err := exec.Command("docker", "ps", "--format", `{{.RunningFor}}:{{.Names}}`).Output()
 			if err != nil {
 				fmt.Println(fmt.Sprint(err) + ": " + string(out))
@@ -73,7 +75,7 @@ func hundleCommand(cmd string) {
 					SendTelegramMessage("Le container : "+dockerPs[1]+" run depuis : "+dockerPs[0], true)
 				}
 			}
-		} else {
+		default:
 			SendTelegramMessage("Je suis toujours en apprentissage.. je n'es pas compris.", true)
 		}
 	} else {
