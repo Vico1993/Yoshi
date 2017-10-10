@@ -45,6 +45,15 @@ func hundleCommand(cmd string) {
 	case "/news":
 		var source string
 
+		if params[0] == "list" {
+			notification.SendTelegramMessage("Alors, voici la liste des sources possible...  ", true)
+			sources := []string{"abc-news-au-api", "al-jazeera-english-api", "ars-technica-api", "associated-press-api", "bbc-news-api", "bbc-sport-api", "bloomberg-api", "breitbart-news-api", "business-insider-api", "business-insider-uk-api", "buzzfeed-api", "cnbc-api", "cnn-api", "daily-mail-api", "engadget-api", "entertainment-weekly-api", "espn-api", "espn-cric-info-api", "financial-times-api", "football-italia-api", "fortune-api", "four-four-two-api", "fox-sports-api", "google-news-api", "hacker-news-api", "ign-api", "independent-api", "mashable-api", "metro-api", "mirror-api", "mtv-news-api", "mtv-news-uk-api", "national-geographic-api", "new-scientist-api", "newsweek-api", "new-york-magazine-api", "nfl-news-api", "polygon-api", "recode-api", "reddit-r-all-api", "reuters-api", "talksport-api", "techcrunch-api", "techradar-api", "the-economist-api", "the-guardian-au-api", "the-guardian-uk-api", "the-hindu-api", "the-huffington-post-api", "the-lad-bible-api", "the-new-york-times-api", "the-next-web-api", "the-sport-bible-api", "the-telegraph-api", "the-times-of-india-api", "the-verge-api", "the-wall-street-journal-api", "the-washington-post-api", "time-api", "usa-today-api"}
+
+			for _, src := range sources {
+				notification.SendTelegramMessage(src, false)
+			}
+		}
+
 		if len(params) > 0 {
 			source = params[0]
 		} else {
