@@ -1,7 +1,6 @@
 package source
 
 import (
-	"fmt"
 	"log"
 
 	"github.com/PuerkitoBio/goquery"
@@ -11,29 +10,39 @@ const (
 	baseURL = "https://dev.to"
 )
 
+type Article struct {
+	Title string
+	Link  string
+	Tags  []string
+}
+
 // GetArticle get all article Data from Dev.To
-func GetArticle() {
-	doc, err := goquery.NewDocument(baseURL)
+func GetArticle(url string) []Article {
+	var data []Article
+	doc, err := goquery.NewDocument(url)
 	if err != nil {
 		log.Fatal(err)
 	}
 
 	doc.Find(".articles-list .single-article").Each(func(index int, item *goquery.Selection) {
-		var tags string
+		var art Article
+
 		// Get Link
 		linkTag := item.Find(".index-article-link")
 		link, _ := linkTag.Attr("href")
-		link = baseURL + link
+		art.Link = baseURL + link
 
 		// Get Title
-		title := linkTag.Find("h3").Text()
+		art.Title = linkTag.Find("h3").Text()
 
 		// Get Tags
 		tagsNode := item.Find(".tags")
 		tagsNode.Each(func(i int, item *goquery.Selection) {
-			tags += item.Find("span").Text() + " "
+			art.Tags = append(art.Tags, item.Find("span").Text())
 		})
 
-		fmt.Printf("Post #%d: %s - %s\nTag : %s\n\n", index, title, link, tags)
+		data = append(data, art)
 	})
+
+	return data
 }
