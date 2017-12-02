@@ -10,10 +10,19 @@ const (
 	baseURL = "https://dev.to"
 )
 
+// Article Structure des article trouvé sur Dev.to
 type Article struct {
 	Title string
 	Link  string
 	Tags  []string
+}
+
+// ArticleSent Json envoyé en Telegram
+type ArticleSent struct {
+	article []struct {
+		link string
+		seen bool
+	}
 }
 
 // GetArticle get all article Data from Dev.To
