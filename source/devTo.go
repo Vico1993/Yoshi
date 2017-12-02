@@ -1,7 +1,12 @@
 package source
 
 import (
+	"bufio"
+	"encoding/json"
+	"fmt"
+	"io/ioutil"
 	"log"
+	"os"
 
 	"github.com/PuerkitoBio/goquery"
 )
@@ -19,10 +24,12 @@ type Article struct {
 
 // ArticleSent Json envoyé en Telegram
 type ArticleSent struct {
-	article []struct {
-		link string
-		seen bool
-	}
+	Link string `json:"link"`
+	Seen bool   `json:"seen"`
+}
+
+type listArticl struct {
+	Collection []ArticleSent
 }
 
 // GetArticle get all article Data from Dev.To
@@ -50,8 +57,71 @@ func GetArticle(url string) []Article {
 			art.Tags = append(art.Tags, item.Find("span").Text())
 		})
 
-		data = append(data, art)
+		// If not sent append to return
+		if !alreadySent(art.Link) {
+			data = append(data, art)
+		}
 	})
 
 	return data
+}
+
+// UpdateArticleSent write new article sent
+func UpdateArticleSent(data []Article) {
+	dataSent := getArticleSent()
+
+	for _, d := range data {
+		newStruct := ArticleSent{
+			d.Link,
+			true,
+		}
+
+		dataSent = append(dataSent, newStruct)
+	}
+
+	out, err := json.Marshal(dataSent)
+	if err != nil {
+		panic(err)
+	}
+
+	file, err := os.OpenFile("send/devTo.json", os.O_WRONLY|os.O_CREATE, 0666)
+	if err != nil {
+		fmt.Println("File does not exists or cannot be created")
+		os.Exit(1)
+	}
+	defer file.Close()
+
+	w := bufio.NewWriter(file)
+	fmt.Fprintf(w, string(out))
+
+	w.Flush()
+}
+
+func alreadySent(link string) bool {
+	ret := false
+	dataSent := getArticleSent()
+
+	for _, a := range dataSent {
+		if a.Link == link {
+			ret = true
+			break
+		}
+	}
+
+	return ret
+}
+
+func getArticleSent() []ArticleSent {
+	data, err := ioutil.ReadFile("send/devTo.json")
+	if err != nil {
+		log.Fatal("Error cant read json")
+	}
+
+	var dataSent []ArticleSent
+	lerr := json.Unmarshal(data, &dataSent)
+	if lerr != nil {
+		fmt.Println("error:", lerr)
+	}
+
+	return dataSent
 }

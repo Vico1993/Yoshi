@@ -1,6 +1,7 @@
 package main
 
 import (
+	"fmt"
 	"strings"
 
 	"github.com/vico1993/Yoshi/notification"
@@ -10,9 +11,15 @@ import (
 func main() {
 	data := source.GetArticle("https://dev.to")
 
-	notification.SendTelegramMessage("Voici la Front Page de dev.to", true)
-	for _, article := range data {
-		notification.SendTelegramMessage(article.Link+"\n"+strings.Join(article.Tags, " - "), false)
-		break
+	fmt.Println("Data:")
+	fmt.Println(data)
+
+	if len(data) >= 1 {
+		notification.SendTelegramMessage("Voici la Front Page de dev.to", true)
+		for _, article := range data {
+			notification.SendTelegramMessage(article.Link+"\n"+strings.Join(article.Tags, ""), false)
+		}
+
+		source.UpdateArticleSent(data)
 	}
 }
