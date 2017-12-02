@@ -1,7 +1,7 @@
 package main
 
-import "github.com/vico1993/Yoshi/notification"
+import "github.com/vico1993/Yoshi/source"
 
 func main() {
-	notification.SendTelegramMessage("Bonjour", false)
+	source.GetArticle()
 }

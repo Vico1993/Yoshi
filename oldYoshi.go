@@ -7,7 +7,6 @@ import (
 	"os/exec"
 	"strings"
 
-	"github.com/vico1993/Yoshi/api"
 	"github.com/vico1993/Yoshi/notification"
 )
 
@@ -62,7 +61,7 @@ func hundleCommand(cmd string) {
 
 		notification.SendTelegramMessage("Alors, voici quelque news de "+source+" ", true)
 
-		var newsReturn = api.AskNewsApi(source, "top")
+		var newsReturn = source.AskNewsApi(source, "top")
 
 		for _, artcl := range newsReturn.Articles {
 			var message = "*" + artcl.Title + "* \n" + artcl.Description + "\n" + artcl.URL
