@@ -61,12 +61,12 @@ func hundleCommand(cmd string) {
 
 		notification.SendTelegramMessage("Alors, voici quelque news de "+source+" ", true)
 
-		var newsReturn = source.AskNewsApi(source, "top")
+		// var newsReturn = source.AskNewsApi(source, "top")
 
-		for _, artcl := range newsReturn.Articles {
-			var message = "*" + artcl.Title + "* \n" + artcl.Description + "\n" + artcl.URL
-			notification.SendTelegramMessage(message, false)
-		}
+		// for _, artcl := range newsReturn.Articles {
+		// 	var message = "*" + artcl.Title + "* \n" + artcl.Description + "\n" + artcl.URL
+		// 	notification.SendTelegramMessage(message, false)
+		// }
 	default:
 		notification.SendTelegramMessage("Je suis toujours en apprentissage.. je n'es pas compris.", true)
 	}
