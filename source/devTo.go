@@ -124,7 +124,7 @@ func getArticleSent() []ArticleSent {
 	var dataSent []ArticleSent
 	lerr := json.Unmarshal(data, &dataSent)
 	if lerr != nil {
-		fmt.Println("error:", lerr)
+		fmt.Println("error Parsing JSON:", lerr)
 	}
 
 	return dataSent
