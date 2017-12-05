@@ -8,7 +8,7 @@ import (
 
 // Config is the structure of my confile file
 type Config struct {
-	PathToJSONFile string `json:"PathToJsonFile"`
+	Path string `json:"Path"`
 }
 
 // GetConfigData return all parameter of Conf.json
