@@ -9,6 +9,7 @@ import (
 	"os"
 
 	"github.com/PuerkitoBio/goquery"
+	"github.com/vico1993/Yoshi/utils"
 )
 
 const (
@@ -84,7 +85,9 @@ func UpdateArticleSent(data []Article) {
 		panic(err)
 	}
 
-	file, err := os.OpenFile("send/devTo.json", os.O_WRONLY|os.O_CREATE, 0666)
+	config := utils.GetConfigData()
+
+	file, err := os.OpenFile(config.Path+"/send/devTo.json", os.O_WRONLY|os.O_CREATE, 0666)
 	if err != nil {
 		fmt.Println("File does not exists or cannot be created")
 		os.Exit(1)
@@ -112,9 +115,10 @@ func alreadySent(link string) bool {
 }
 
 func getArticleSent() []ArticleSent {
-	data, err := ioutil.ReadFile("send/devTo.json")
+	config := utils.GetConfigData()
+	data, err := ioutil.ReadFile(config.Path + "/send/devTo.json")
 	if err != nil {
-		log.Fatal("Error cant read json")
+		fmt.Println("error can't read Json:", err)
 	}
 
 	var dataSent []ArticleSent
