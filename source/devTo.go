@@ -34,7 +34,7 @@ type listArticl struct {
 }
 
 // GetArticle get all article Data from Dev.To
-func GetArticle(url string) []Article {
+func GetArticle(url string, hastags []string) []Article {
 	var data []Article
 	doc, err := goquery.NewDocument(url)
 	if err != nil {
@@ -58,9 +58,11 @@ func GetArticle(url string) []Article {
 			art.Tags = append(art.Tags, item.Find("span").Text())
 		})
 
-		// If not sent append to return
-		if !alreadySent(art.Link) {
-			data = append(data, art)
+		if articleGoTag(art.Tags, hastags) {
+			// If not sent append to return
+			if !alreadySent(art.Link) {
+				data = append(data, art)
+			}
 		}
 	})
 
@@ -128,4 +130,20 @@ func getArticleSent() []ArticleSent {
 	}
 
 	return dataSent
+}
+
+func articleGoTag(artTag []string, tagWanted []string) bool {
+	res := false
+	for _, at := range artTag {
+		for _, tw := range tagWanted {
+			if at == tw {
+				res = true
+				break
+			}
+		}
+		if res {
+			break
+		}
+	}
+	return res
 }

@@ -8,7 +8,8 @@ import (
 )
 
 func main() {
-	data := source.GetArticle("https://dev.to")
+	tags := []string{"linux", "go", "beginners", "productivity", "php", "explainlikeimfive", "devtips", "docker", "tips"}
+	data := source.GetArticle("https://dev.to", tags)
 
 	if len(data) >= 1 {
 		notification.SendTelegramMessage("Voici la Front Page de dev.to", true)
