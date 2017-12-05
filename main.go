@@ -1,7 +1,6 @@
 package main
 
 import (
-	"fmt"
 	"strings"
 
 	"github.com/vico1993/Yoshi/notification"
@@ -10,9 +9,6 @@ import (
 
 func main() {
 	data := source.GetArticle("https://dev.to")
-
-	fmt.Println("Data:")
-	fmt.Println(data)
 
 	if len(data) >= 1 {
 		notification.SendTelegramMessage("Voici la Front Page de dev.to", true)
