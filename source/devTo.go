@@ -7,6 +7,7 @@ import (
 	"io/ioutil"
 	"log"
 	"os"
+	"strings"
 
 	"github.com/PuerkitoBio/goquery"
 	"github.com/vico1993/Yoshi/utils"
@@ -133,6 +134,8 @@ func getArticleSent() []ArticleSent {
 }
 
 func articleGoTag(artTag []string, tagWanted []string) bool {
+
+	artTag = strings.Split(artTag[0], "#")
 	res := false
 	for _, at := range artTag {
 		for _, tw := range tagWanted {
@@ -145,5 +148,6 @@ func articleGoTag(artTag []string, tagWanted []string) bool {
 			break
 		}
 	}
+
 	return res
 }
