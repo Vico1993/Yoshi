@@ -8,7 +8,7 @@ import (
 )
 
 func main() {
-	tags := []string{"linux", "go", "beginners", "productivity", "php", "explainlikeimfive", "devtips", "docker", "tips"}
+	tags := []string{"#linux", "#go", "#beginners", "#productivity", "#php", "#explainlikeimfive", "#devtips", "#docker", "#tips"}
 	data := source.GetArticle("https://dev.to", tags)
 
 	if len(data) >= 1 {
