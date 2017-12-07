@@ -3,7 +3,7 @@ package main
 import (
 	"strings"
 
-	"github.com/vico1993/Yoshi/notification"
+	telegram "github.com/vico1993/Telegram-Client"
 	"github.com/vico1993/Yoshi/source"
 )
 
@@ -12,9 +12,10 @@ func main() {
 	data := source.GetArticle("https://dev.to", tags)
 
 	if len(data) >= 1 {
-		notification.SendTelegramMessage("Voici la Front Page de dev.to", true)
+		cl := telegram.NewBetaClient("359897077", "429433832:AAHhjwe5-IQXoXTU0gduQuFDsQnilA7RKLU")
+		cl.SendTelegramMessage("Voici la Front Page de dev.to", true)
 		for _, article := range data {
-			notification.SendTelegramMessage(article.Link+"\n"+strings.Join(article.Tags, ""), false)
+			cl.SendTelegramMessage(article.Link+"\n"+strings.Join(article.Tags, ""), false)
 		}
 
 		source.UpdateArticleSent(data)
