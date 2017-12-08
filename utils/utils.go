@@ -13,7 +13,8 @@ type Config struct {
 	TelegramBotAPI string `json:"telegram_bot_api"`
 }
 
-type kill struct {
+// Kill Struct to kill Yoshi and display an error Message
+type Kill struct {
 	Message string
 	err     error
 }
