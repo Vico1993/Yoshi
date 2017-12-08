@@ -15,12 +15,9 @@ func main() {
 
 	if len(data) >= 1 {
 
-		config, err := utils.GetConfigData()
-		if ( err != nil ) {
-			fmt.Println( "An error append when Yoshi try to acces at your conf.json. Please Make sure the file is here." )
-		}
+		config := utils.GetConfigData()
 
-		cl := telegram.NewBetaClient("359897077", "429433832:AAHhjwe5-IQXoXTU0gduQuFDsQnilA7RKLU")
+		cl := telegram.NewBetaClient(config.TelegramChatID, config.TelegramBotAPI)
 		cl.SendTelegramMessage("Voici la Front Page de dev.to", true)
 		for _, article := range data {
 			cl.SendTelegramMessage(article.Link+"\n"+strings.Join(article.Tags, ""), false)
