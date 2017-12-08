@@ -17,7 +17,7 @@ func main() {
 
 		config, err := utils.GetConfigData()
 		if ( err != nil ) {
-			fmt.Println( "An error append when Yoshi try to acces to your conf.json. Please Make sure the file is here." )
+			fmt.Println( "An error append when Yoshi try to acces at your conf.json. Please Make sure the file is here." )
 		}
 
 		cl := telegram.NewBetaClient("359897077", "429433832:AAHhjwe5-IQXoXTU0gduQuFDsQnilA7RKLU")
