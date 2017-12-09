@@ -22,7 +22,9 @@ type Kill struct {
 // KillYoshi stop process
 func KillYoshi(k Kill) {
 	fmt.Println(k.Message)
-	fmt.Println(k.Err)
+	if k.Err != nil {
+		fmt.Println(k.Err)
+	}
 	os.Exit(1)
 }
 
@@ -39,6 +41,11 @@ func GetConfigData() Config {
 	err := decoder.Decode(&configuration)
 	if err != nil {
 		killData := Kill{"An error append when Yoshi try to acces to your conf.json. Please check if your json is correct ( https://jsonlint.com ) .", err}
+		KillYoshi(killData)
+	}
+
+	if configuration.TelegramBotAPI == "" || configuration.Path == "" || configuration.TelegramChatID == "" {
+		killData := Kill{"Please some of your information in your conf.json is not complete.. Please update it.", err}
 		KillYoshi(killData)
 	}
 

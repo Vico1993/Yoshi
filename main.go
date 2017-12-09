@@ -10,12 +10,14 @@ import (
 )
 
 func main() {
+
+	// Check Config
+	config := utils.GetConfigData()
+
 	tags := []string{"linux", "go", "beginners", "productivity", "php", "explainlikeimfive", "devtips", "docker", "tips", "bots"}
 	data := source.GetArticle("https://dev.to", tags)
 
 	if len(data) >= 1 {
-
-		config := utils.GetConfigData()
 
 		cl := telegram.NewBetaClient(config.TelegramChatID, config.TelegramBotAPI)
 		cl.SendTelegramMessage("Voici la Front Page de dev.to", true)
