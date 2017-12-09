@@ -121,13 +121,15 @@ func getArticleSent() []ArticleSent {
 	config := utils.GetConfigData()
 	data, err := ioutil.ReadFile(config.Path + "/send/devTo.json")
 	if err != nil {
-		kill := Kill{"Can't read/find the file devTo.json, Please check your file.. ", err}
+		kill := utils.Kill{"Can't read/find the file devTo.json, Please check your file.. ", err}
+		utils.KillYoshi(kill)
 	}
 
 	var dataSent []ArticleSent
 	lerr := json.Unmarshal(data, &dataSent)
 	if lerr != nil {
-		kill := Kill{"Can't parse your JsonFile.. Please check it ! ( https://jsonlint.com ) ", lerr}
+		kill := utils.Kill{"Can't parse your JsonFile.. Please check it ! ( https://jsonlint.com ) ", lerr}
+		utils.KillYoshi(kill)
 	}
 
 	return dataSent
