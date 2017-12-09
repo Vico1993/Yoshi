@@ -22,6 +22,7 @@ type Kill struct {
 // KillYoshi stop process
 func KillYoshi(k Kill) {
 	fmt.Println(k.Message)
+	fmt.Println(k.Err)
 	os.Exit(1)
 }
 

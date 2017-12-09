@@ -107,10 +107,12 @@ func alreadySent(link string) bool {
 	ret := false
 	dataSent := getArticleSent()
 
-	for _, a := range dataSent {
-		if a.Link == link {
-			ret = true
-			break
+	if len(dataSent) > 1 {
+		for _, a := range dataSent {
+			if a.Link == link {
+				ret = true
+				break
+			}
 		}
 	}
 
@@ -121,16 +123,16 @@ func getArticleSent() []ArticleSent {
 	config := utils.GetConfigData()
 	data, err := ioutil.ReadFile(config.Path + "/send/devTo.json")
 	if err != nil {
-		kill := utils.Kill{"Can't read/find the file devTo.json, Please check your file.. ", err}
+		kill := utils.Kill{Message: "Can't read/find the file devTo.json, Please check your file.. ", Err: err}
 		utils.KillYoshi(kill)
 	}
 
 	var dataSent []ArticleSent
-	lerr := json.Unmarshal(data, &dataSent)
-	if lerr != nil {
-		kill := utils.Kill{"Can't parse your JsonFile.. Please check it ! ( https://jsonlint.com ) ", lerr}
-		utils.KillYoshi(kill)
-	}
+	_ = json.Unmarshal(data, &dataSent)
+	// if lerr != nil {
+	// 	kill := utils.Kill{Message: "Can't parse your JsonFile.. Please check it ! ( https://jsonlint.com ) ", Err: lerr}
+	// 	utils.KillYoshi(kill)
+	// }
 
 	return dataSent
 }
