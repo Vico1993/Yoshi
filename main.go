@@ -20,7 +20,6 @@ func main() {
 	if len(data) >= 1 {
 
 		cl := telegram.NewBetaClient(config.TelegramChatID, config.TelegramBotAPI)
-		cl.SendTelegramMessage("Voici la Front Page de dev.to", true)
 		for _, article := range data {
 			cl.SendTelegramMessage(article.Link+"\n"+strings.Join(article.Tags, ""), false)
 		}
