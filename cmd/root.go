@@ -1,12 +1,20 @@
 package cmd
 
-import "github.com/spf13/cobra"
+import (
+	"fmt"
+
+	"github.com/spf13/cobra"
+)
 
 // RootCmd is entry point of this cmd
 var RootCmd = &cobra.Command{
 	Use:   "yoshi",
 	Short: "Yoshi is the niciest bot you ever seen.",
 	Long:  `Yoshi is here to send to you some information, Tech news, weather.. and some personal stuff :)`,
+	Run: func(cmd *cobra.Command, args []string) {
+		fmt.Println("ROOOT")
+		fmt.Println(args)
+	},
 }
 
 func init() {

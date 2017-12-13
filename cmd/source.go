@@ -12,6 +12,7 @@ var sourceCmd = &cobra.Command{
 	Short: "To get in touch",
 	Long:  `Yoshi sent to you, depande on the source you want`,
 	Run: func(cmd *cobra.Command, args []string) {
+		fmt.Println("SOURCE")
 		fmt.Println(args)
 	},
 }
@@ -19,6 +20,7 @@ var sourceCmd = &cobra.Command{
 func init() {
 	RootCmd.AddCommand(sourceCmd)
 
-	sourceCmd.PersistentFlags().String("site", "devTo", "Done le site de news vous voulez")
-	// sourceCmd.Flags().BoolP("site", "s", false, "Done le site de news vous voulez")
+	// Exemple Commande : ./Yoshi source https://devTo.com
+
+	sourceCmd.Flags().BoolP("site", "s", true, "Done le site de news vous voulez")
 }
