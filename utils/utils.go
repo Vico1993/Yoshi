@@ -61,3 +61,20 @@ func GetConfigData() Config {
 func CheckConfig(configuration Config) {
 
 }
+
+// WriteLogs write log on the yoshi.log each time he is use.
+// func WriteLogs(source string, nbSent int, nbNotSent int) {
+// 	config := GetConfigData()
+// 	f, err := os.OpenFile(config.Path+"/logs/yoshi.log", os.O_APPEND|os.O_WRONLY, 0600)
+// 	if err != nil {
+// 		panic(err)
+// 	}
+
+// 	defer f.Close()
+
+// 	text := time.Now()
+
+// 	if _, err = f.WriteString(text); err != nil {
+// 		panic(err)
+// 	}
+// }
